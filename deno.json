@@ -1,0 +1,21 @@
+{
+	"name": "@webtools/araxys",
+	"version": "0.1.0",
+	"exports": "./src/mod.ts",
+
+	"lock": false,
+	"imports": {
+		"@std/fs": "jsr:@std/fs@^1.0.1",
+		"@std/path": "jsr:@std/path@^1.0.2",
+		"@webtools/expressapi": "jsr:@webtools/expressapi@^0.3.1",
+
+		"telegraf": "npm:telegraf@^4.16.3",
+		"telegraf/types": "npm:@telegraf/types@^7.1.0"
+	},
+
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 120,
+		"indentWidth": 4
+	}
+}
