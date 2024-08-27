@@ -53,7 +53,8 @@ export class Araxys {
 	}
 
 	private registerEventListeners() {
-		this.bot.start(async (ctx) => {
+		// deno-lint-ignore no-explicit-any
+		this.bot.start(async (ctx: telegraf.Context<any>) => {
 			if (ctx.chat.type != "private") {
 				return;
 			}
@@ -78,7 +79,7 @@ export class Araxys {
 				? await message.buttons.bind(this)(ctx, this.config.home)
 				: message.buttons;
 
-			this.users.set(ctx.from.id, { id: ctx.message.message_id, name: this.config.home });
+			this.users.set(ctx.from!.id, { id: ctx.message.message_id, name: this.config.home });
 			await ctx.deleteMessage();
 
 			if (this.config.photo == null) {
@@ -100,7 +101,11 @@ export class Araxys {
 			}
 		});
 
-		this.bot.on(telegrafFilters.callbackQuery(), (ctx) => this.sendMessage(ctx.update.callback_query.data, ctx));
+		this.bot.on(
+			telegrafFilters.callbackQuery(),
+			// deno-lint-ignore no-explicit-any
+			(ctx: telegraf.Context<any>) => this.sendMessage(ctx.update.callback_query.data, ctx),
+		);
 
 		this.bot.on(telegrafFilters.message(), async (ctx) => {
 			if (ctx.chat.type != "private") {
@@ -108,11 +113,11 @@ export class Araxys {
 			}
 
 			await ctx.deleteMessage();
-			if (!this.users.has(ctx.from.id)) {
+			if (!this.users.has(ctx.from!.id)) {
 				return;
 			}
 
-			const name = this.users.get(ctx.from.id)?.name || "";
+			const name = this.users.get(ctx.from!.id)?.name || "";
 			const message = this.messageManager.getMessage(name);
 			if (message == null || message.onmessage == null) {
 				return;
@@ -122,7 +127,8 @@ export class Araxys {
 		});
 	}
 
-	public async sendMessage(name: string, ctx: telegraf.Context) {
+	// deno-lint-ignore no-explicit-any
+	public async sendMessage(name: string, ctx: telegraf.Context<any>) {
 		const message = this.messageManager.getMessage(name);
 		if (message == null) {
 			throw new Error(`The message named "${name}" does not exist.`);
@@ -141,19 +147,17 @@ export class Araxys {
 			: message.buttons;
 
 		const messageId = ctx.update.callback_query == undefined
-			? this.users.get(ctx.from.id)?.id
+			? this.users.get(ctx.from!.id)?.id
 			: ctx.update.callback_query.message.message_id;
 
-		this.users.set(ctx.from.id, { id: messageId, name: name });
+		this.users.set(ctx.from!.id, { id: messageId, name: name });
 		if (this.config.photo == null) {
-			await ctx.editMessageText(messageContent, {
-				message_id: messageId,
+			await this.bot.telegram.editMessageText(ctx.from!.id, messageId, undefined, messageContent, {
 				parse_mode: "HTML",
 				reply_markup: messageButtons.reply_markup,
 			});
 		} else {
-			await ctx.editMessageCaption(messageContent, {
-				message_id: messageId,
+			await this.bot.telegram.editMessageCaption(ctx.from!.id, messageId, undefined, messageContent, {
 				parse_mode: "HTML",
 				reply_markup: messageButtons.reply_markup,
 			});
