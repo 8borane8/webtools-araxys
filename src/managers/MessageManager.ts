@@ -18,6 +18,6 @@ export class MessageManager {
 	}
 
 	public getMessage(name: string): Message | null {
-		return this.messages.find((message) => message.name == name) || null;
+		return this.messages.find((message) => message.name == name.split(":")[0]) || null;
 	}
 }

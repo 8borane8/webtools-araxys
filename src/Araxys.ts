@@ -63,16 +63,19 @@ export class Araxys {
 				throw new Error();
 			}
 
-			const messageOnLoad = message.onload == null ? undefined : await message.onload.bind(this)(ctx);
+			const messageOnLoad = message.onload == null
+				? undefined
+				: await message.onload.bind(this)(ctx, this.config.home);
+
 			if (messageOnLoad != undefined) {
 				// Redirection vers le nouveau message
 			}
 
 			const messageContent = typeof message.content == "function"
-				? await message.content.bind(this)(ctx)
+				? await message.content.bind(this)(ctx, this.config.home)
 				: message.content;
 			const messageButtons = typeof message.buttons == "function"
-				? await message.buttons.bind(this)(ctx)
+				? await message.buttons.bind(this)(ctx, this.config.home)
 				: message.buttons;
 
 			this.users.set(ctx.from.id, { id: ctx.message.message_id, name: this.config.home });
@@ -109,12 +112,13 @@ export class Araxys {
 				return;
 			}
 
-			const message = this.messageManager.getMessage(this.users.get(ctx.from.id)?.name || "");
+			const name = this.users.get(ctx.from.id)?.name || "";
+			const message = this.messageManager.getMessage(name);
 			if (message == null || message.onmessage == null) {
 				return;
 			}
 
-			await message.onmessage(ctx);
+			await message.onmessage(ctx, name);
 		});
 	}
 
@@ -124,16 +128,16 @@ export class Araxys {
 			throw new Error(`The message named "${name}" does not exist.`);
 		}
 
-		const messageOnLoad = message.onload == null ? undefined : await message.onload.bind(this)(ctx);
+		const messageOnLoad = message.onload == null ? undefined : await message.onload.bind(this)(ctx, name);
 		if (messageOnLoad != undefined) {
 			// Redirection vers le nouveau message
 		}
 
 		const messageContent = typeof message.content == "function"
-			? await message.content.bind(this)(ctx)
+			? await message.content.bind(this)(ctx, name)
 			: message.content;
 		const messageButtons = typeof message.buttons == "function"
-			? await message.buttons.bind(this)(ctx)
+			? await message.buttons.bind(this)(ctx, name)
 			: message.buttons;
 
 		const messageId = ctx.update.callback_query == undefined
