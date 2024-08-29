@@ -27,7 +27,7 @@ performant, léger et facile à utiliser, Araxys simplifie le développement des
 ## Technologies
 
 - **Language** : Deno (Typescript)
-- **Librairies** : @std/fs, @std/path, @webtools/expressapi, telegraf, @telegraf/types
+- **Librairies** : @std/fs, @std/path, telegraf, @telegraf/types
 
 ## Avantages
 

@@ -136,7 +136,8 @@ export class Araxys {
 
 		const messageOnLoad = message.onload == null ? undefined : await message.onload.bind(this)(ctx, name);
 		if (messageOnLoad != undefined) {
-			// Redirection vers le nouveau message
+			this.sendMessage(messageOnLoad, ctx);
+			return;
 		}
 
 		const messageContent = typeof message.content == "function"
