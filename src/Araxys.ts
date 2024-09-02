@@ -10,7 +10,7 @@ import type { Config } from "./interfaces/Config.ts";
 export class Araxys {
 	private readonly users: Map<number, UserMessage> = new Map();
 
-	private readonly bot: telegraf.Telegraf;
+	public readonly bot: telegraf.Telegraf;
 	private readonly messageManager: MessageManager;
 	private readonly config: Config;
 
