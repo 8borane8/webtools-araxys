@@ -2,7 +2,7 @@
 
 <p align="center">
     <em>
-        Araxys is a small, simple, and ultrafast telegram framework built on Web Standards for Deno.
+        Araxys is a small, simple, and ultrafast library for building Telegram bots, built on Web Standards for Deno.
     </em>
 </p>
 
